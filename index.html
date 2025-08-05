@@ -1,55 +1,36 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>sevimli bir olgunun bağlamı</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    /* Temel ayarlar */
     body {
       margin: 0;
       background: #000;
       color: #fff;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: 'Orbitron', sans-serif;
       overflow: hidden;
-    }
-
-    #intro-screen {
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .click-indicator {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #ccc;
-      animation: pulse 1s infinite alternate;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.4; }
-      100% { transform: scale(1.6); opacity: 1; }
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #main-content {
-      display: none;
       width: 100vw;
       height: 100vh;
       position: relative;
       background: #000;
+      overflow: hidden;
     }
 
+    /* Partiküller */
     #floating-particles {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 1;
       pointer-events: none;
     }
@@ -59,7 +40,7 @@
       width: 3px;
       height: 3px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.2);
       animation: float 14s linear infinite;
     }
 
@@ -68,125 +49,228 @@
       100% { transform: translateY(-100vh) translateX(50px); }
     }
 
-    #quote {
+    /* Pizza gif */
+    #pizza-gif {
       position: absolute;
-      top: 30%;
+      top: 25%;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1.4rem;
-      font-weight: 300;
-      text-align: center;
-      line-height: 1.5;
+      width: 120px;
+      max-width: 35vw;
       z-index: 2;
-      padding: 0 20px;
-      color: #eee;
-      letter-spacing: 0.5px;
+      user-select: none;
     }
 
+    /* Mail butonu (tron tarzı neon) */
     #mail-button {
       position: absolute;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       background: transparent;
-      border: none;
-      color: #aaa;
-      font-size: 1.8rem;
-      cursor: pointer;
-      z-index: 3;
+      border: 2px solid #0ff;
+      padding: 10px 16px;
+      font-size: 2rem;
+      color: #0ff;
+      border-radius: 50%;
       text-decoration: none;
+      box-shadow: 0 0 15px #0ff;
+      z-index: 3;
+      transition: all 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 52px;
+      height: 52px;
+      user-select: none;
     }
 
     #mail-button:hover {
-      color: #fff;
+      background: #0ff;
+      color: #000;
+      box-shadow: 0 0 25px #0ff;
     }
 
-    footer {
+    /* Oyun butonu */
+    #game-button {
       position: absolute;
-      bottom: 8px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.7rem;
-      color: #666;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 28px;
+      background: #222;
+      color: #0ff;
+      border: 2px solid #0ff;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 3;
+      font-size: 1.1rem;
+      box-shadow: 0 0 10px #0ff;
+      user-select: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    #game-button:hover {
+      background: #0ff;
+      color: #000;
     }
 
-    @media (max-width: 600px) {
-      #quote {
-        font-size: 1.1rem;
+    /* Oyun ekranı */
+    #game {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #000;
+      z-index: 4;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Yıldızlar */
+    .star {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: yellow;
+      border-radius: 50%;
+      box-shadow: 0 0 8px 2px yellow;
+      user-select: none;
+    }
+
+    /* Engelleyici blok */
+    .blocker {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      width: 70px;
+      height: 12px;
+      background: #0ff;
+      transform: translateX(-50%);
+      border-radius: 4px;
+      box-shadow: 0 0 15px #0ff;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      #pizza-gif {
+        width: 90px;
+      }
+      #mail-button {
+        width: 44px;
+        height: 44px;
+        font-size: 1.6rem;
+        padding: 8px 12px;
+      }
+      #game-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        bottom: 80px;
+      }
+      .star {
+        width: 10px;
+        height: 10px;
+      }
+      .blocker {
+        width: 50px;
+        height: 10px;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Intro ekranı: tıklama bekliyor -->
-  <div id="intro-screen" onclick="revealSite()">
-    <div class="click-indicator"></div>
-  </div>
-
-  <!-- Ana içerik -->
   <div id="main-content">
     <div id="floating-particles"></div>
 
-    <div id="quote">Omne solum liberio patria est</div>
+    <img id="pizza-gif" src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" alt="Dans eden pizza" />
 
-    <a id="mail-button" href="mailto:uk.kilickaya98@icloud.com">✉️</a>
-    <footer>designed by uk.kilickaya</footer>
+    <a id="mail-button" href="mailto:uk.kilickaya98@icloud.com" title="Bana mail at!">✉️</a>
+
+    <button id="game-button" onclick="startGame()">⭐ Oyun</button>
+
+    <div id="game">
+      <div class="blocker" id="blocker"></div>
+    </div>
   </div>
 
-  <script>
-    // Geçişi başlat
-    function revealSite() {
-      document.getElementById("intro-screen").style.display = "none";
-      document.getElementById("main-content").style.display = "block";
+<script>
+  // Partikül oluşturucu
+  function createParticle() {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * window.innerWidth + 'px';
+    p.style.top = Math.random() * window.innerHeight + 'px';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    document.getElementById('floating-particles').appendChild(p);
+    setTimeout(() => p.remove(), 16000);
+  }
+  setInterval(createParticle, 300);
+
+  // Oyun başlat
+  function startGame() {
+    const game = document.getElementById('game');
+    if (game.style.display === 'block') return; // Tekrar açma
+
+    game.style.display = 'block';
+
+    // Yıldız düşür
+    const dropInterval = setInterval(() => {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * (window.innerWidth - 12) + 'px';
+      star.style.top = '-12px';
+      game.appendChild(star);
+
+      let topPos = -12;
+      const fallSpeed = 3 + Math.random() * 3; // px per frame ~ 30ms
+      const fall = setInterval(() => {
+        if (!star.parentElement) {
+          clearInterval(fall);
+          return;
+        }
+        topPos += fallSpeed;
+        star.style.top = topPos + 'px';
+
+        // Alt sınır
+        if (topPos > window.innerHeight - 40) {
+          star.remove();
+          clearInterval(fall);
+        }
+
+        // Engelleyici ile çarpışma kontrolü
+        const blocker = document.getElementById('blocker');
+        const blockerRect = blocker.getBoundingClientRect();
+        const starRect = star.getBoundingClientRect();
+
+        if (
+          starRect.bottom >= blockerRect.top &&
+          starRect.left + starRect.width >= blockerRect.left &&
+          starRect.left <= blockerRect.right
+        ) {
+          star.remove();
+          clearInterval(fall);
+        }
+      }, 30);
+    }, 900);
+
+    // Engelleyici hareketi (fare ve dokunmatik)
+    function moveBlocker(x) {
+      const blocker = document.getElementById('blocker');
+      const minX = 0;
+      const maxX = window.innerWidth - blocker.offsetWidth;
+      let posX = x - blocker.offsetWidth / 2;
+      if (posX < minX) posX = minX;
+      if (posX > maxX) posX = maxX;
+      blocker.style.left = posX + 'px';
     }
 
-    // Partikül üretimi
-    function createParticle() {
-      const p = document.createElement("div");
-      p.className = "particle";
-      p.style.left = Math.random() * window.innerWidth + "px";
-      p.style.top = Math.random() * window.innerHeight + "px";
-      p.style.animationDuration = (6 + Math.random() * 10) + "s";
-      document.getElementById("floating-particles").appendChild(p);
-      setTimeout(() => p.remove(), 16000);
-    }
-    setInterval(createParticle, 300);
-
-    // Ziyaretçi takibi
-    (async () => {
-      const webhook = "https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec";
-      const ipInfo = await fetch("https://ipapi.co/json/").then(res => res.json()).catch(() => ({}));
-      const ip = ipInfo.ip || "bilinmiyor";
-      const city = ipInfo.city || "bilinmiyor";
-      const device = navigator.userAgent;
-      const browser = navigator.appName + " " + navigator.appVersion;
-      const resolution = `${screen.width}x${screen.height}`;
-      const page = window.location.pathname;
-      const referrer = document.referrer || "";
-
-      const cookieKey = "zz_track_id";
-      let cookie = document.cookie.split("; ").find(row => row.startsWith(cookieKey + "="));
-      let isNew = "Hayır";
-      if (!cookie) {
-        const id = Math.random().toString(36).substring(2);
-        document.cookie = `${cookieKey}=${id}; expires=${new Date(Date.now() + 31536000000).toUTCString()}; path=/`;
-        cookie = id;
-        isNew = "Evet";
-      } else {
-        cookie = cookie.split("=")[1];
+    window.addEventListener('mousemove', e => moveBlocker(e.clientX));
+    window.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) {
+        moveBlocker(e.touches[0].clientX);
       }
-
-      const payload = { ip, city, device, browser, resolution, cookie, new: isNew, page, referrer };
-      fetch(webhook + "?" + new URLSearchParams(payload), { method: "POST" });
-
-      const startTime = Date.now();
-      window.addEventListener("beforeunload", () => {
-        const duration = Math.floor((Date.now() - startTime) / 1000);
-        navigator.sendBeacon(webhook + "?" + new URLSearchParams({ ...payload, duration }));
-      });
-    })();
-  </script>
-
+    });
+  }
+</script>
 </body>
 </html>
