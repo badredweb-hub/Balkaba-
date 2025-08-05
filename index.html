@@ -3,63 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <title>sevimli bir olgunun bağlamı</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    body {
-      margin: 0;
+    body, html {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       background: #000;
-      color: #fff;
+      color: #0ff;
       font-family: 'Orbitron', sans-serif;
       overflow: hidden;
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    #loading-screen, #main-content {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      z-index: 10;
+      flex-direction: column;
     }
 
     #main-content {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
+      display: none;
+      z-index: 5;
+      flex-direction: column;
       background: #000;
       overflow: hidden;
     }
 
-    #floating-particles {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
+    /* Tıklama animasyonlu nokta */
+    #click-indicator {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      animation: float 14s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); }
-      100% { transform: translateY(-100vh) translateX(50px); }
-    }
-
-    #pizza-gif {
-      position: absolute;
-      top: 25%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      max-width: 35vw;
-      z-index: 2;
+      background: rgba(0, 255, 255, 0.15);
+      box-shadow:
+        0 0 10px 3px rgba(0, 255, 255, 0.35),
+        inset 0 0 10px 2px rgba(0, 255, 255, 0.6);
+      animation: pulse 1.8s ease-in-out infinite;
+      cursor: pointer;
+      position: relative;
       user-select: none;
     }
-
-    #mail-button {
+    #click-indicator::after {
+      content: '';
       position: absolute;
+      top: 50%; left: 50%;
+      width: 18px; height: 18px;
+      background: #0ff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px #0ff;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.4);
+        opacity: 0.3;
+      }
+    }
+
+    /* Mail butonu */
+    #mail-button {
+      position: fixed;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
@@ -71,204 +88,66 @@
       border-radius: 50%;
       text-decoration: none;
       box-shadow: 0 0 15px #0ff;
-      z-index: 3;
-      transition: all 0.3s;
+      z-index: 100;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 52px;
       height: 52px;
       user-select: none;
+      transition: all 0.3s;
     }
-
     #mail-button:hover {
       background: #0ff;
       color: #000;
       box-shadow: 0 0 25px #0ff;
     }
 
-    #game-button {
-      position: absolute;
-      bottom: 90px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 12px 28px;
-      background: #222;
-      color: #0ff;
-      border: 2px solid #0ff;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 3;
-      font-size: 1.1rem;
-      box-shadow: 0 0 10px #0ff;
-      user-select: none;
-      transition: background 0.3s, color 0.3s;
-    }
-    #game-button:hover {
-      background: #0ff;
-      color: #000;
-    }
-
-    #game {
-      display: none;
+    /* Yıldızımsı partiküller */
+    #star-container {
       position: absolute;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #000;
-      z-index: 4;
+      width: 100%; height: 100%;
+      pointer-events: none;
       overflow: hidden;
-      user-select: none;
+      z-index: 0;
     }
-
     .star {
       position: absolute;
-      width: 12px;
-      height: 12px;
-      background: yellow;
+      width: 3px;
+      height: 3px;
+      background: white;
       border-radius: 50%;
-      box-shadow: 0 0 8px 2px yellow;
-      user-select: none;
-    }
-
-    .blocker {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      width: 70px;
-      height: 12px;
-      background: #0ff;
-      transform: translateX(-50%);
-      border-radius: 4px;
-      box-shadow: 0 0 15px #0ff;
-      user-select: none;
-    }
-
-    @media (max-width: 480px) {
-      #pizza-gif {
-        width: 90px;
-      }
-      #mail-button {
-        width: 44px;
-        height: 44px;
-        font-size: 1.6rem;
-        padding: 8px 12px;
-      }
-      #game-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        bottom: 80px;
-      }
-      .star {
-        width: 10px;
-        height: 10px;
-      }
-      .blocker {
-        width: 50px;
-        height: 10px;
-      }
+      box-shadow: 0 0 6px 1.5px rgba(255,255,255,0.7);
+      opacity: 0.8;
+      will-change: transform;
     }
   </style>
 </head>
 <body>
+
+  <div id="loading-screen">
+    <div id="click-indicator" title="Tıklayarak giriş yap"></div>
+  </div>
+
   <div id="main-content">
-    <div id="floating-particles"></div>
-
-    <img id="pizza-gif" src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" alt="Dans eden pizza" />
-
+    <div id="star-container"></div>
     <a id="mail-button" href="mailto:uk.kilickaya98@icloud.com" title="Bana mail at!">✉️</a>
-
-    <button id="game-button" onclick="startGame()">⭐ Oyun</button>
-
-    <div id="game">
-      <div class="blocker" id="blocker"></div>
-    </div>
   </div>
 
 <script>
-  // Partikül oluşturucu
-  function createParticle() {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * window.innerWidth + 'px';
-    p.style.top = Math.random() * window.innerHeight + 'px';
-    p.style.animationDuration = (6 + Math.random() * 10) + 's';
-    document.getElementById('floating-particles').appendChild(p);
-    setTimeout(() => p.remove(), 16000);
-  }
-  setInterval(createParticle, 300);
+  const loadingScreen = document.getElementById('loading-screen');
+  const mainContent = document.getElementById('main-content');
+  const clickIndicator = document.getElementById('click-indicator');
+  const starContainer = document.getElementById('star-container');
 
-  // Oyun başlatma fonksiyonu
-  function startGame() {
-    const game = document.getElementById('game');
-    if (game.style.display === 'block') return;
+  // Gönderim URL'n:
+  const webhookURL = 'https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec';
 
-    game.style.display = 'block';
-
-    // Yıldız düşürme
-    const dropInterval = setInterval(() => {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.left = Math.random() * (window.innerWidth - 12) + 'px';
-      star.style.top = '-12px';
-      game.appendChild(star);
-
-      let topPos = -12;
-      const fallSpeed = 3 + Math.random() * 3;
-
-      const fall = setInterval(() => {
-        if (!star.parentElement) {
-          clearInterval(fall);
-          return;
-        }
-        topPos += fallSpeed;
-        star.style.top = topPos + 'px';
-
-        if (topPos > window.innerHeight - 40) {
-          star.remove();
-          clearInterval(fall);
-        }
-
-        // Çarpışma kontrolü
-        const blocker = document.getElementById('blocker');
-        const blockerRect = blocker.getBoundingClientRect();
-        const starRect = star.getBoundingClientRect();
-
-        if (
-          starRect.bottom >= blockerRect.top &&
-          starRect.left + starRect.width >= blockerRect.left &&
-          starRect.left <= blockerRect.right
-        ) {
-          star.remove();
-          clearInterval(fall);
-        }
-      }, 30);
-    }, 900);
-
-    // Engelleyici hareketi (fare & dokunmatik)
-    function moveBlocker(x) {
-      const blocker = document.getElementById('blocker');
-      const minX = 0;
-      const maxX = window.innerWidth - blocker.offsetWidth;
-      let posX = x - blocker.offsetWidth / 2;
-      if (posX < minX) posX = minX;
-      if (posX > maxX) posX = maxX;
-      blocker.style.left = posX + 'px';
-    }
-
-    window.addEventListener('mousemove', e => moveBlocker(e.clientX));
-    window.addEventListener('touchmove', e => {
-      if (e.touches.length > 0) {
-        moveBlocker(e.touches[0].clientX);
-      }
-    });
-  }
-
-  // Ziyaretçi takibi fonksiyonu
+  // Sayfa açılır açılmaz ziyaretçi bilgisi gönder
   function sendVisitData() {
-    const url = 'https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec';
-
     const data = {
-      ip: 'unknown', // IP backend'de yakalanacak
+      ip: 'hidden', // IP Apps Script tarafından alınacak
       userAgent: navigator.userAgent,
       device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       screen: window.screen.width + 'x' + window.screen.height,
@@ -276,18 +155,61 @@
       timestamp: new Date().toISOString()
     };
 
-    fetch(url, {
+    fetch(webhookURL, {
       method: 'POST',
-      mode: 'no-cors',
+      mode: 'no-cors', 
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    }).catch(e => console.log('Ziyaret verisi gönderilemedi:', e));
+    }).catch(e => console.warn('Ziyaret verisi gönderilemedi', e));
   }
 
-  window.addEventListener('load', sendVisitData);
+  sendVisitData();
 
+  // Tıklama ekranı geçişi ve yıldızlar
+  clickIndicator.addEventListener('click', () => {
+    loadingScreen.style.display = 'none';
+    mainContent.style.display = 'flex';
+    createStars(60);
+    animateStars();
+  });
+
+  // Yıldız oluşturma ve hareket
+  let stars = [];
+
+  function createStars(amount) {
+    for(let i=0; i<amount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      starContainer.appendChild(star);
+
+      stars.push({
+        el: star,
+        x: parseFloat(star.style.left),
+        y: parseFloat(star.style.top),
+        dx: (Math.random() * 0.1) + 0.02,
+        dy: (Math.random() * 0.1) + 0.02
+      });
+    }
+  }
+
+  function animateStars() {
+    stars.forEach(s => {
+      s.x += s.dx;
+      s.y += s.dy;
+
+      if (s.x > 100) s.x = 0;
+      if (s.y > 100) s.y = 0;
+
+      s.el.style.transform = `translate(${s.x}vw, ${s.y}vh)`;
+    });
+
+    requestAnimationFrame(animateStars);
+  }
 </script>
+
 </body>
 </html>
