@@ -1,151 +1,227 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <title>sevimli bir olgunun bağlamı</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🥔 Eğlence Zone</title>
 
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      background: #000;
-      color: #0ff;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      user-select: none;
-      position: relative;
-    }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 
-    #loading-screen, #main-content {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-      z-index: 10;
-      flex-direction: column;
-    }
+  /* Renk paleti */
+  :root {
+    --oak-white: #FAF5EF;
+    --brut-grey: #55575A;
+    --lemon-yellow: #EECFA1;
+    --ocean-blue: #1E3A8A;
+    --ocean-night: #0E1A40;
+  }
 
-    #main-content {
-      display: none;
-      z-index: 5;
-      flex-direction: column;
-      background: #000;
-      overflow: hidden;
-    }
+  /* Reset */
+  * {
+    margin:0; padding:0; box-sizing: border-box;
+  }
 
-    /* Tıklama animasyonlu nokta */
-    #click-indicator {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow:
-        0 0 10px 3px rgba(255, 255, 255, 0.35),
-        inset 0 0 10px 2px rgba(255, 255, 255, 0.6);
-      animation: pulse 1.8s ease-in-out infinite;
-      cursor: pointer;
-      position: relative;
-      user-select: none;
-    }
-    #click-indicator::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 18px; height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px #fff;
-    }
+  body, html {
+    height: 100%;
+    font-family: 'Fredoka One', cursive;
+    background: var(--oak-white);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--brut-grey);
+    user-select: none;
+  }
 
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.8;
-      }
-      50% {
-        transform: scale(1.4);
-        opacity: 0.3;
-      }
-    }
+  /* Loading Screen */
+  #loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--ocean-night);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    z-index: 100;
+  }
 
-    /* Mail butonu sade */
-    #mail-button {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: transparent;
-      border: 2px solid #fff;
-      padding: 10px 16px;
-      font-size: 2rem;
-      color: #fff;
-      border-radius: 50%;
-      text-decoration: none;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 52px;
-      height: 52px;
-      user-select: none;
-      transition: all 0.3s;
-    }
-    #mail-button:hover {
-      background: #fff;
-      color: #000;
-    }
+  #loading-indicator {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--lemon-yellow);
+    animation: pulse 1.8s ease-in-out infinite;
+    box-shadow: 0 0 15px var(--lemon-yellow);
+    position: relative;
+  }
+  #loading-indicator::after {
+    content: "Tıkla!";
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ocean-night);
+    user-select: none;
+  }
 
-    /* Yıldızımsı partiküller */
-    #star-container {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .star {
-      position: absolute;
-      width: 2.5px;
-      height: 2.5px;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 0 6px 1.5px rgba(255,255,255,0.7);
-      opacity: 0.7;
-      will-change: transform;
-    }
-  </style>
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.6; }
+  }
+
+  /* Main Content */
+  #main-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--lemon-yellow) 0%, var(--ocean-blue) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Eğlenceli GIF */
+  #fun-gif {
+    max-width: 280px;
+    max-height: 280px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    margin: 30px 0;
+    user-select: none;
+  }
+
+  /* Title */
+  #title {
+    font-size: 2.4rem;
+    margin-bottom: 0.3rem;
+    color: var(--oak-white);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  }
+
+  /* Star particles */
+  #star-container {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.8;
+    box-shadow: 0 0 8px 2px #fff;
+    width: 3px;
+    height: 3px;
+  }
+
+  /* Mail button */
+  #mail-button {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--oak-white);
+    color: var(--ocean-blue);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: background 0.3s ease, color 0.3s ease;
+    z-index: 10;
+  }
+  #mail-button:hover {
+    background: var(--lemon-yellow);
+    color: var(--ocean-night);
+  }
+
+</style>
+
 </head>
 <body>
 
-  <div id="loading-screen">
-    <div id="click-indicator" title="Tıklayarak giriş yap"></div>
+  <div id="loading-screen" title="Tıklayarak siteye gir">
+    <div id="loading-indicator"></div>
   </div>
 
   <div id="main-content">
+    <h1 id="title">🥔 Patates Party! 🥳</h1>
+    <img id="fun-gif" src="https://media.giphy.com/media/3o7aD6o7qISn3Vl5yI/giphy.gif" alt="Eğlenceli Patates GIF" draggable="false" />
     <div id="star-container"></div>
-    <a id="mail-button" href="mailto:uk.kilickaya98@icloud.com" title="Bana mail at!">✉️</a>
+    <button id="mail-button" aria-label="Mail Gönder" title="Bana mail at!">✉️</button>
   </div>
 
 <script>
-  const loadingScreen = document.getElementById('loading-screen');
-  const mainContent = document.getElementById('main-content');
-  const clickIndicator = document.getElementById('click-indicator');
-  const starContainer = document.getElementById('star-container');
-
   // Google Apps Script webhook URL'n:
   const webhookURL = 'https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec';
 
-  // Sayfa açılır açılmaz ziyaretçi bilgisi gönder
+  const loadingScreen = document.getElementById('loading-screen');
+  const mainContent = document.getElementById('main-content');
+  const mailBtn = document.getElementById('mail-button');
+  const starContainer = document.getElementById('star-container');
+
+  // Yıldız parçacıkları dizisi
+  let stars = [];
+
+  // Yıldız üretimi
+  function createStars(count = 80) {
+    for(let i=0; i<count; i++){
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = `${Math.random() * 100}vw`;
+      star.style.top = `${Math.random() * 100}vh`;
+      star.style.width = `${2 + Math.random() * 2}px`;
+      star.style.height = star.style.width;
+      starContainer.appendChild(star);
+
+      stars.push({
+        el: star,
+        x: parseFloat(star.style.left),
+        y: parseFloat(star.style.top),
+        dx: (Math.random()-0.5)*0.1,
+        dy: (Math.random()-0.5)*0.1,
+        size: parseFloat(star.style.width),
+      });
+    }
+  }
+
+  // Yıldız hareketi
+  function animateStars(){
+    stars.forEach(s => {
+      s.x += s.dx;
+      s.y += s.dy;
+
+      if(s.x < 0) s.x = 100;
+      else if(s.x > 100) s.x = 0;
+      if(s.y < 0) s.y = 100;
+      else if(s.y > 100) s.y = 0;
+
+      s.el.style.left = s.x + 'vw';
+      s.el.style.top = s.y + 'vh';
+    });
+
+    requestAnimationFrame(animateStars);
+  }
+
+  // Ziyaretçi verisi gönder
   function sendVisitData() {
     const data = {
-      ip: 'hidden', // IP backend tarafından alınacak
+      ip: 'hidden',
       userAgent: navigator.userAgent,
       device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       screen: window.screen.width + 'x' + window.screen.height,
@@ -156,57 +232,29 @@
     fetch(webhookURL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: {'Content-Type':'application/json'},
       body: JSON.stringify(data)
-    }).catch(e => console.warn('Ziyaret verisi gönderilemedi', e));
+    }).catch(() => {
+      console.warn('Ziyaret verisi gönderilemedi');
+    });
   }
 
-  sendVisitData();
-
-  // Tıklama ekranı geçişi ve yıldızlar
-  clickIndicator.addEventListener('click', () => {
+  // Ana ekran göster, loading gizle
+  function startApp(){
     loadingScreen.style.display = 'none';
     mainContent.style.display = 'flex';
-    createStars(60);
+    createStars();
     animateStars();
+    sendVisitData();
+  }
+
+  // Loading ekranı tıklama
+  loadingScreen.addEventListener('click', startApp);
+
+  // Mail butonu mail uygulamasını açar
+  mailBtn.addEventListener('click', () => {
+    window.location.href = "mailto:uk.kilickaya98@icloud.com";
   });
-
-  // Yıldız oluşturma ve hareket
-  let stars = [];
-
-  function createStars(amount) {
-    for(let i=0; i<amount; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      star.style.left = Math.random() * 100 + 'vw';
-      star.style.top = Math.random() * 100 + 'vh';
-      starContainer.appendChild(star);
-
-      stars.push({
-        el: star,
-        x: parseFloat(star.style.left),
-        y: parseFloat(star.style.top),
-        dx: (Math.random() * 0.1) + 0.02,
-        dy: (Math.random() * 0.1) + 0.02
-      });
-    }
-  }
-
-  function animateStars() {
-    stars.forEach(s => {
-      s.x += s.dx;
-      s.y += s.dy;
-
-      if (s.x > 100) s.x = 0;
-      if (s.y > 100) s.y = 0;
-
-      s.el.style.transform = `translate(${s.x}vw, ${s.y}vh)`;
-    });
-
-    requestAnimationFrame(animateStars);
-  }
 </script>
 
 </body>
