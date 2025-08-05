@@ -5,61 +5,149 @@
   <title>sevimli bir olgunun bağlamı</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root {
-      --oak-white: #FAF5EF;
-      --brut-grey: #55575A;
-      --lemon-yellow: #eecfa1;
-      --ocean-night: #003366;
-    }
     body {
-      background: var(--oak-white);
-      color: var(--brut-grey);
+      margin: 0;
+      background: #000;
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 2em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      color: white;
+      overflow: hidden;
     }
-    img {
-      max-width: 300px;
+
+    #preloader {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.5); opacity: 1; }
+    }
+
+    #main-content {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #floating-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(173,255,47,0.8);
+      animation: float 12s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); }
+      100% { transform: translateY(-100vh) translateX(100px); }
+    }
+
+    #centered-gif {
+      z-index: 2;
+      position: relative;
+      text-align: center;
+      margin-top: 10vh;
+    }
+    #centered-gif img {
+      width: 200px;
+      border-radius: 12px;
+      border: 3px solid #444;
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    #mail-button {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 12px 24px;
       border-radius: 10px;
-      border: 5px solid var(--brut-grey);
+      text-decoration: none;
+      font-size: 1rem;
+      z-index: 3;
       transition: all 0.3s ease;
     }
-    img:hover {
-      transform: scale(1.05);
-      border-color: var(--lemon-yellow);
+    #mail-button:hover {
+      background: #fff;
+      color: #000;
     }
-    .funny-text {
-      margin-top: 1rem;
-      font-style: italic;
-      color: var(--ocean-night);
-    }
-    .mail-button {
-      margin-top: 2rem;
-      background: var(--lemon-yellow);
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+
     footer {
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: #999;
+      position: absolute;
+      bottom: 8px;
+      font-size: 0.75rem;
+      width: 100%;
+      text-align: center;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <img src="https://media.giphy.com/media/WXB88TeARFVvi/giphy.gif" alt="ilginç gif">
-  <div class="funny-text">bu gif senin davranışlarını izliyor olabilir.</div>
-  <button class="mail-button" onclick="window.location.href='mailto:uk.kilickaya@icloud.com'">📩 bana mektup yaz</button>
-  <footer>designed by uk.kilickaya</footer>
+
+  <div id="preloader">
+    <div class="loader-dot"></div>
+  </div>
+
+  <div id="main-content">
+    <div id="floating-particles"></div>
+
+    <div id="centered-gif">
+      <img src="https://media.giphy.com/media/WXB88TeARFVvi/giphy.gif" alt="gif">
+    </div>
+
+    <a id="mail-button" href="mailto:uk.kilickaya@icloud.com">📩 bana yaz</a>
+    <footer>designed by uk.kilickaya</footer>
+  </div>
 
   <script>
+    // Açılış ekranı
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("preloader").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }, 1200);
+    });
+
+    // Partikül efekti
+    function createParticle() {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = Math.random() * window.innerWidth + "px";
+      particle.style.top = Math.random() * window.innerHeight + "px";
+      particle.style.animationDuration = (5 + Math.random() * 10) + "s";
+      document.getElementById("floating-particles").appendChild(particle);
+      setTimeout(() => particle.remove(), 12000);
+    }
+    setInterval(createParticle, 400);
+
+    // Ziyaretçi takibi
     (async () => {
       const webhook = "https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec";
 
@@ -85,7 +173,6 @@
       }
 
       const payload = { ip, city, device, browser, resolution, cookie, new: isNew, page, referrer };
-
       fetch(webhook + "?" + new URLSearchParams(payload), { method: "POST" });
 
       const startTime = Date.now();
@@ -95,5 +182,6 @@
       });
     })();
   </script>
+
 </body>
 </html>
