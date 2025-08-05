@@ -7,7 +7,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    /* Temel ayarlar */
     body {
       margin: 0;
       background: #000;
@@ -26,7 +25,6 @@
       overflow: hidden;
     }
 
-    /* Partiküller */
     #floating-particles {
       position: absolute;
       top: 0; left: 0;
@@ -49,7 +47,6 @@
       100% { transform: translateY(-100vh) translateX(50px); }
     }
 
-    /* Pizza gif */
     #pizza-gif {
       position: absolute;
       top: 25%;
@@ -61,7 +58,6 @@
       user-select: none;
     }
 
-    /* Mail butonu (tron tarzı neon) */
     #mail-button {
       position: absolute;
       bottom: 30px;
@@ -91,7 +87,6 @@
       box-shadow: 0 0 25px #0ff;
     }
 
-    /* Oyun butonu */
     #game-button {
       position: absolute;
       bottom: 90px;
@@ -114,7 +109,6 @@
       color: #000;
     }
 
-    /* Oyun ekranı */
     #game {
       display: none;
       position: absolute;
@@ -126,7 +120,6 @@
       user-select: none;
     }
 
-    /* Yıldızlar */
     .star {
       position: absolute;
       width: 12px;
@@ -137,7 +130,6 @@
       user-select: none;
     }
 
-    /* Engelleyici blok */
     .blocker {
       position: absolute;
       bottom: 20px;
@@ -151,7 +143,6 @@
       user-select: none;
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
       #pizza-gif {
         width: 90px;
@@ -206,14 +197,14 @@
   }
   setInterval(createParticle, 300);
 
-  // Oyun başlat
+  // Oyun başlatma fonksiyonu
   function startGame() {
     const game = document.getElementById('game');
-    if (game.style.display === 'block') return; // Tekrar açma
+    if (game.style.display === 'block') return;
 
     game.style.display = 'block';
 
-    // Yıldız düşür
+    // Yıldız düşürme
     const dropInterval = setInterval(() => {
       const star = document.createElement('div');
       star.className = 'star';
@@ -222,7 +213,8 @@
       game.appendChild(star);
 
       let topPos = -12;
-      const fallSpeed = 3 + Math.random() * 3; // px per frame ~ 30ms
+      const fallSpeed = 3 + Math.random() * 3;
+
       const fall = setInterval(() => {
         if (!star.parentElement) {
           clearInterval(fall);
@@ -231,13 +223,12 @@
         topPos += fallSpeed;
         star.style.top = topPos + 'px';
 
-        // Alt sınır
         if (topPos > window.innerHeight - 40) {
           star.remove();
           clearInterval(fall);
         }
 
-        // Engelleyici ile çarpışma kontrolü
+        // Çarpışma kontrolü
         const blocker = document.getElementById('blocker');
         const blockerRect = blocker.getBoundingClientRect();
         const starRect = star.getBoundingClientRect();
@@ -253,7 +244,7 @@
       }, 30);
     }, 900);
 
-    // Engelleyici hareketi (fare ve dokunmatik)
+    // Engelleyici hareketi (fare & dokunmatik)
     function moveBlocker(x) {
       const blocker = document.getElementById('blocker');
       const minX = 0;
@@ -271,6 +262,32 @@
       }
     });
   }
+
+  // Ziyaretçi takibi fonksiyonu
+  function sendVisitData() {
+    const url = 'https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec';
+
+    const data = {
+      ip: 'unknown', // IP backend'de yakalanacak
+      userAgent: navigator.userAgent,
+      device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      screen: window.screen.width + 'x' + window.screen.height,
+      language: navigator.language,
+      timestamp: new Date().toISOString()
+    };
+
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).catch(e => console.log('Ziyaret verisi gönderilemedi:', e));
+  }
+
+  window.addEventListener('load', sendVisitData);
+
 </script>
 </body>
 </html>
