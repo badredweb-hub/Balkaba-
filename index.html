@@ -3,80 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <title>sevimli bir olgunun bağlamı</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
       background: #000;
-      font-family: Arial, sans-serif;
-      color: white;
+      color: #fff;
+      font-family: 'Helvetica Neue', sans-serif;
       overflow: hidden;
     }
 
-    #preloader {
-      position: fixed;
+    #intro-screen {
       width: 100vw;
       height: 100vh;
       background: #000;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      cursor: pointer;
     }
-    .loader-dot {
-      width: 20px;
-      height: 20px;
+
+    .click-indicator {
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.6);
+      background: #ccc;
       animation: pulse 1s infinite alternate;
     }
+
     @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(1.5); opacity: 1; }
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.6); opacity: 1; }
     }
 
     #main-content {
       display: none;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
       position: relative;
       background: #000;
-      overflow: hidden;
     }
 
     #floating-particles {
       position: absolute;
-      width: 100%;
-      height: 100%;
       top: 0;
       left: 0;
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
       z-index: 1;
-    }
-    .particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(173,255,47,0.8);
-      animation: float 12s linear infinite;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); }
-      100% { transform: translateY(-100vh) translateX(100px); }
+      pointer-events: none;
     }
 
-    #centered-gif {
-      z-index: 2;
-      position: relative;
-      text-align: center;
-      margin-top: 10vh;
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      animation: float 14s linear infinite;
     }
-    #centered-gif img {
-      width: 200px;
-      border-radius: 12px;
-      border: 3px solid #444;
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); }
+      100% { transform: translateY(-100vh) translateX(50px); }
+    }
+
+    #quote {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.4rem;
+      font-weight: 300;
+      text-align: center;
+      line-height: 1.5;
+      z-index: 2;
+      padding: 0 20px;
+      color: #eee;
+      letter-spacing: 0.5px;
     }
 
     #mail-button {
@@ -84,73 +88,74 @@
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      border: 2px solid #fff;
-      padding: 12px 24px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-size: 1rem;
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 1.8rem;
+      cursor: pointer;
       z-index: 3;
-      transition: all 0.3s ease;
+      text-decoration: none;
     }
+
     #mail-button:hover {
-      background: #fff;
-      color: #000;
+      color: #fff;
     }
 
     footer {
       position: absolute;
       bottom: 8px;
-      font-size: 0.75rem;
       width: 100%;
       text-align: center;
-      color: #777;
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      #quote {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="preloader">
-    <div class="loader-dot"></div>
+  <!-- Intro ekranı: tıklama bekliyor -->
+  <div id="intro-screen" onclick="revealSite()">
+    <div class="click-indicator"></div>
   </div>
 
+  <!-- Ana içerik -->
   <div id="main-content">
     <div id="floating-particles"></div>
 
-    <div id="centered-gif">
-      <img src="https://media.giphy.com/media/WXB88TeARFVvi/giphy.gif" alt="gif">
-    </div>
+    <div id="quote">Omne solum liberio patria est</div>
 
-    <a id="mail-button" href="mailto:uk.kilickaya@icloud.com">📩 bana yaz</a>
+    <a id="mail-button" href="mailto:uk.kilickaya98@icloud.com">✉️</a>
     <footer>designed by uk.kilickaya</footer>
   </div>
 
   <script>
-    // Açılış ekranı
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        document.getElementById("preloader").style.display = "none";
-        document.getElementById("main-content").style.display = "block";
-      }, 1200);
-    });
-
-    // Partikül efekti
-    function createParticle() {
-      const particle = document.createElement("div");
-      particle.className = "particle";
-      particle.style.left = Math.random() * window.innerWidth + "px";
-      particle.style.top = Math.random() * window.innerHeight + "px";
-      particle.style.animationDuration = (5 + Math.random() * 10) + "s";
-      document.getElementById("floating-particles").appendChild(particle);
-      setTimeout(() => particle.remove(), 12000);
+    // Geçişi başlat
+    function revealSite() {
+      document.getElementById("intro-screen").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
     }
-    setInterval(createParticle, 400);
+
+    // Partikül üretimi
+    function createParticle() {
+      const p = document.createElement("div");
+      p.className = "particle";
+      p.style.left = Math.random() * window.innerWidth + "px";
+      p.style.top = Math.random() * window.innerHeight + "px";
+      p.style.animationDuration = (6 + Math.random() * 10) + "s";
+      document.getElementById("floating-particles").appendChild(p);
+      setTimeout(() => p.remove(), 16000);
+    }
+    setInterval(createParticle, 300);
 
     // Ziyaretçi takibi
     (async () => {
       const webhook = "https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec";
-
       const ipInfo = await fetch("https://ipapi.co/json/").then(res => res.json()).catch(() => ({}));
       const ip = ipInfo.ip || "bilinmiyor";
       const city = ipInfo.city || "bilinmiyor";
