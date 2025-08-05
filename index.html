@@ -7,7 +7,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    body, html {
+    html, body {
       margin: 0; padding: 0;
       width: 100%; height: 100%;
       background: #000;
@@ -43,10 +43,10 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: rgba(0, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.15);
       box-shadow:
-        0 0 10px 3px rgba(0, 255, 255, 0.35),
-        inset 0 0 10px 2px rgba(0, 255, 255, 0.6);
+        0 0 10px 3px rgba(255, 255, 255, 0.35),
+        inset 0 0 10px 2px rgba(255, 255, 255, 0.6);
       animation: pulse 1.8s ease-in-out infinite;
       cursor: pointer;
       position: relative;
@@ -57,10 +57,10 @@
       position: absolute;
       top: 50%; left: 50%;
       width: 18px; height: 18px;
-      background: #0ff;
+      background: #fff;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px #0ff;
+      box-shadow: 0 0 12px #fff;
     }
 
     @keyframes pulse {
@@ -74,20 +74,19 @@
       }
     }
 
-    /* Mail butonu */
+    /* Mail butonu sade */
     #mail-button {
       position: fixed;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       background: transparent;
-      border: 2px solid #0ff;
+      border: 2px solid #fff;
       padding: 10px 16px;
       font-size: 2rem;
-      color: #0ff;
+      color: #fff;
       border-radius: 50%;
       text-decoration: none;
-      box-shadow: 0 0 15px #0ff;
       z-index: 100;
       display: flex;
       justify-content: center;
@@ -98,9 +97,8 @@
       transition: all 0.3s;
     }
     #mail-button:hover {
-      background: #0ff;
+      background: #fff;
       color: #000;
-      box-shadow: 0 0 25px #0ff;
     }
 
     /* Yıldızımsı partiküller */
@@ -114,12 +112,12 @@
     }
     .star {
       position: absolute;
-      width: 3px;
-      height: 3px;
+      width: 2.5px;
+      height: 2.5px;
       background: white;
       border-radius: 50%;
       box-shadow: 0 0 6px 1.5px rgba(255,255,255,0.7);
-      opacity: 0.8;
+      opacity: 0.7;
       will-change: transform;
     }
   </style>
@@ -141,13 +139,13 @@
   const clickIndicator = document.getElementById('click-indicator');
   const starContainer = document.getElementById('star-container');
 
-  // Gönderim URL'n:
+  // Google Apps Script webhook URL'n:
   const webhookURL = 'https://script.google.com/macros/s/AKfycbxPk_HHNA6tptcZgreFi2gb2gzmCiy_F-kP-kdIlK7ifCO-DxVHZZqrGmLuLfpWFs4_/exec';
 
   // Sayfa açılır açılmaz ziyaretçi bilgisi gönder
   function sendVisitData() {
     const data = {
-      ip: 'hidden', // IP Apps Script tarafından alınacak
+      ip: 'hidden', // IP backend tarafından alınacak
       userAgent: navigator.userAgent,
       device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       screen: window.screen.width + 'x' + window.screen.height,
@@ -157,7 +155,7 @@
 
     fetch(webhookURL, {
       method: 'POST',
-      mode: 'no-cors', 
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
